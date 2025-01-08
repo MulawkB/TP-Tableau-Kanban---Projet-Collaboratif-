@@ -18,7 +18,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   document.querySelectorAll(".card").forEach((card) => {
     if (!card.querySelector(".delete-btn")) {
-        DelCard(card);
+      DelCard(card);
     }
   });
 
@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // Ajouter la fonctionnalité drag & drop aux cartes
   cards.forEach(card => {
     card.setAttribute("draggable", "true");
-  
+
     card.addEventListener("dragstart", (event) => {
       const cardId = event.target.getAttribute("data-id");
       event.dataTransfer.setData("text/plain", cardId);
@@ -43,26 +43,26 @@ window.addEventListener("DOMContentLoaded", () => {
       event.preventDefault(); // Autorise le drop
       column.classList.add("dragover");
     });
-  
+
     column.addEventListener("dragleave", () => {
       column.classList.remove("dragover");
     });
-  
+
     column.addEventListener("drop", (event) => {
       event.preventDefault();
       column.classList.remove("dragover");
-  
+
       const cardId = event.dataTransfer.getData("text/plain");
       const card = document.querySelector(`[data-id='${cardId}']`);
-  
+
       if (card) {
         column.appendChild(card);
-  
+
         // Met à jour le data-status de la carte
         card.setAttribute("data-status", column.getAttribute("data-status"));
       }
     });
-  });  
+  });
   //--------------------------------FIN DRAG & DROP-----------------------------------------//
 
   // Écoute des événements globaux (à l'extérieur de la boucle)
@@ -94,8 +94,9 @@ window.addEventListener("DOMContentLoaded", () => {
       newCard.setAttribute("data-id", generateUniqueId());
       newCard.setAttribute("data-priority", priority);
       newCard.setAttribute("draggable", "true");
+      newCard.style.display = "block";
       newCard.innerHTML = "<h3>" + title + "</h3><p>" + content + "</p><span>Priorité : " + priority + "</span>";
-      
+
       const todoColumn = document.querySelector("[data-status='todo']");
       todoColumn.appendChild(newCard);
 
@@ -107,6 +108,23 @@ window.addEventListener("DOMContentLoaded", () => {
       });
     }
   });
+
+  //--------------------------------FILTER KEYWORD-----------------------------------------//
+  // Écoute de l'événement input sur le champ de recherche
+  searchInput.addEventListener('input', (event) => {
+    const keyword = event.target.value.toLowerCase();
+
+    document.querySelectorAll(".card").forEach(card => {
+      const title = card.querySelector('h3')?.textContent.toLowerCase() || "";
+
+      if (title.includes(keyword)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+  //--------------------------------FIN FILTER KEYWORD-----------------------------------------//
 
   searchInput.addEventListener('input', () => {
     // ...
