@@ -35,6 +35,7 @@ window.addEventListener("DOMContentLoaded", () => {
       newCard.classList.add("card");
       newCard.setAttribute("date-id", generateUniqueId());
       newCard.setAttribute("data-priority", priority);
+      newCard.setAttribute("draggable", "true");
       newCard.innerHTML = "<h3>" + title + "</h3><p>" + content + "</p><span>Priorité : " + priority + "</span>";
 
       const todoColumn = document.querySelector("[data-status='todo']");
