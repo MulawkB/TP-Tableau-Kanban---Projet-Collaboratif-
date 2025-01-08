@@ -33,13 +33,19 @@ window.addEventListener("DOMContentLoaded", () => {
     } else {
       const newCard = document.createElement("div");
       newCard.classList.add("card");
-      newCard.setAttribute("date-id", generateUniqueId());
+      newCard.setAttribute("data-id", generateUniqueId());
       newCard.setAttribute("data-priority", priority);
       newCard.setAttribute("draggable", "true");
       newCard.innerHTML = "<h3>" + title + "</h3><p>" + content + "</p><span>Priorité : " + priority + "</span>";
 
       const todoColumn = document.querySelector("[data-status='todo']");
       todoColumn.appendChild(newCard);
+
+      newCard.addEventListener("dragstart", (event) => {
+        const cardId = event.target.getAttribute("data-id");
+        console.log(`Drag started for card: ${cardId}`);
+        event.dataTransfer.setData("text/plain", cardId);
+      });
     }
   });
 
