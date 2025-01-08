@@ -113,6 +113,19 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   sortByPriorityBtn.addEventListener('click', () => {
-    // ...
+
+      const priority = {high: 1,medium: 2,low: 3 };
+      const columns = document.querySelectorAll('.column');
+      columns.forEach(column => {
+        
+        const cards = Array.from(column.querySelectorAll('.card'));
+
+        cards.sort((a, b) => {
+          const priorityA = priority[a.dataset.priority];
+          const priorityB = priority[b.dataset.priority];
+          return priorityA - priorityB;
+        });
+        cards.forEach(card => column.appendChild(card));
+      });
   });
 });
