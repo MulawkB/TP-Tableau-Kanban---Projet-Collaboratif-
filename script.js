@@ -7,6 +7,21 @@ window.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById('searchInput');
   const sortByPriorityBtn = document.getElementById('sortByPriorityBtn');
 
+  function DelCard(card) {
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "x";
+    deleteBtn.className = "delete-btn";
+    deleteBtn.addEventListener("click", () => {
+      card.remove();
+    });
+    card.appendChild(deleteBtn);
+  }
+  document.querySelectorAll(".card").forEach((card) => {
+    if (!card.querySelector(".delete-btn")) {
+        DelCard(card);
+    }
+  });
+
   //--------------------------------DRAG & DROP-----------------------------------------//
   // Sélectionner les cartes et les colonnes
   const cards = document.querySelectorAll(".card");
@@ -18,7 +33,6 @@ window.addEventListener("DOMContentLoaded", () => {
   
     card.addEventListener("dragstart", (event) => {
       const cardId = event.target.getAttribute("data-id");
-      console.log(`Drag started for card: ${cardId}`);
       event.dataTransfer.setData("text/plain", cardId);
     });
   });
@@ -46,8 +60,6 @@ window.addEventListener("DOMContentLoaded", () => {
   
         // Met à jour le data-status de la carte
         card.setAttribute("data-status", column.getAttribute("data-status"));
-  
-        console.log(`Carte déplacée dans la colonne: ${column.getAttribute("data-status")}`);
       }
     });
   });  
@@ -83,13 +95,12 @@ window.addEventListener("DOMContentLoaded", () => {
       newCard.setAttribute("data-priority", priority);
       newCard.setAttribute("draggable", "true");
       newCard.innerHTML = "<h3>" + title + "</h3><p>" + content + "</p><span>Priorité : " + priority + "</span>";
-
+      
       const todoColumn = document.querySelector("[data-status='todo']");
       todoColumn.appendChild(newCard);
 
       newCard.addEventListener("dragstart", (event) => {
         const cardId = event.target.getAttribute("data-id");
-        console.log(`Drag started for card: ${cardId}`);
         event.dataTransfer.setData("text/plain", cardId);
       });
     }
