@@ -47,3 +47,38 @@ body {
     margin: 5px;
     padding: 5px 10px;
   }
+
+  .card {
+    position: relative;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+
+  .card[data-priority="high"] {
+    border-left: 4px solid red;
+  }
+  
+  .card[data-priority="medium"] {
+    border-left: 4px solid orange;
+  }
+  
+  .card[data-priority="low"] {
+    border-left: 4px solid green;
+  }
+  
+  .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    width: 20px;
+    height: 20px;
+
+    background-color: red;
+    color: white;
+    
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  

@@ -99,6 +99,8 @@ window.addEventListener("DOMContentLoaded", () => {
       const todoColumn = document.querySelector("[data-status='todo']");
       todoColumn.appendChild(newCard);
 
+      DelCard(newCard);
+
       newCard.addEventListener("dragstart", (event) => {
         const cardId = event.target.getAttribute("data-id");
         event.dataTransfer.setData("text/plain", cardId);
