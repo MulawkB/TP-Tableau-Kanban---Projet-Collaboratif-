@@ -1,5 +1,3 @@
-console.log("Kanban JS loaded...");
-
 // Exemple éventuel de structure
 window.addEventListener("DOMContentLoaded", () => {
   // Ici, on récupère les éléments du DOM
@@ -29,7 +27,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   cards.forEach(card => {
     card.setAttribute("draggable", "true");
-  
+
     card.addEventListener("dragstart", (event) => {
       const cardId = event.target.getAttribute("data-id");
       event.dataTransfer.setData("text/plain", cardId);
@@ -41,25 +39,25 @@ window.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       column.classList.add("dragover");
     });
-  
+
     column.addEventListener("dragleave", () => {
       column.classList.remove("dragover");
     });
-  
+
     column.addEventListener("drop", (event) => {
       event.preventDefault();
       column.classList.remove("dragover");
-  
+
       const cardId = event.dataTransfer.getData("text/plain");
       const card = document.querySelector(`[data-id='${cardId}']`);
-  
+
       if (card) {
         column.appendChild(card);
           card.setAttribute("data-status", column.getAttribute("data-status"));
           saveData();
       }
     });
-  });  
+  });
   //--------------------------------FIN DRAG & DROP-----------------------------------------//
 
   // Écoute des événements globaux (à l'extérieur de la boucle)
@@ -91,8 +89,9 @@ window.addEventListener("DOMContentLoaded", () => {
       newCard.setAttribute("data-id", generateUniqueId());
       newCard.setAttribute("data-priority", priority);
       newCard.setAttribute("draggable", "true");
+      newCard.style.display = "block";
       newCard.innerHTML = "<h3>" + title + "</h3><p>" + content + "</p><span>Priorité : " + priority + "</span>";
-      
+
       const todoColumn = document.querySelector("[data-status='todo']");
       todoColumn.appendChild(newCard);
 
@@ -106,6 +105,23 @@ window.addEventListener("DOMContentLoaded", () => {
       saveData();
     }
   });
+
+  //--------------------------------FILTER KEYWORD-----------------------------------------//
+  // Écoute de l'événement input sur le champ de recherche
+  searchInput.addEventListener('input', (event) => {
+    const keyword = event.target.value.toLowerCase();
+
+    document.querySelectorAll(".card").forEach(card => {
+      const title = card.querySelector('h3')?.textContent.toLowerCase() || "";
+
+      if (title.includes(keyword)) {
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  });
+  //--------------------------------FIN FILTER KEYWORD-----------------------------------------//
 
   function saveData() {
     const columns = document.querySelectorAll(".column");
@@ -159,9 +175,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
   loadData();
-  searchInput.addEventListener('input', () => {
-    // ...
-  });
+
 
   sortByPriorityBtn.addEventListener('click', () => {
 
