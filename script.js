@@ -13,21 +13,20 @@ window.addEventListener("DOMContentLoaded", () => {
     deleteBtn.className = "delete-btn";
     deleteBtn.addEventListener("click", () => {
       card.remove();
+      saveData();
     });
     card.appendChild(deleteBtn);
   }
   document.querySelectorAll(".card").forEach((card) => {
     if (!card.querySelector(".delete-btn")) {
-        DelCard(card);
+      DelCard(card);
     }
   });
 
   //--------------------------------DRAG & DROP-----------------------------------------//
-  // Sélectionner les cartes et les colonnes
   const cards = document.querySelectorAll(".card");
   const columns = document.querySelectorAll(".column");
 
-  // Ajouter la fonctionnalité drag & drop aux cartes
   cards.forEach(card => {
     card.setAttribute("draggable", "true");
   
@@ -37,10 +36,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Gérer le dragover et le drop sur les colonnes
   columns.forEach(column => {
     column.addEventListener("dragover", (event) => {
-      event.preventDefault(); // Autorise le drop
+      event.preventDefault();
       column.classList.add("dragover");
     });
   
@@ -57,9 +55,8 @@ window.addEventListener("DOMContentLoaded", () => {
   
       if (card) {
         column.appendChild(card);
-  
-        // Met à jour le data-status de la carte
-        card.setAttribute("data-status", column.getAttribute("data-status"));
+          card.setAttribute("data-status", column.getAttribute("data-status"));
+          saveData();
       }
     });
   });  
@@ -105,14 +102,61 @@ window.addEventListener("DOMContentLoaded", () => {
         const cardId = event.target.getAttribute("data-id");
         event.dataTransfer.setData("text/plain", cardId);
       });
+
+      saveData();
     }
   });
 
-  searchInput.addEventListener('input', () => {
-    // ...
-  });
+  function saveData() {
+    const columns = document.querySelectorAll(".column");
+    const boardState = {};
 
-  sortByPriorityBtn.addEventListener('click', () => {
-    // ...
-  });
+    columns.forEach(column => {
+      const columnStatus = column.getAttribute("data-status");
+      boardState[columnStatus] = [];
+
+      const cards = column.querySelectorAll(".card");
+      cards.forEach(card => {
+        const cardData = {
+          id: card.getAttribute("data-id"),
+          title: card.querySelector("h3").textContent,
+          content: card.querySelector("p").textContent,
+          priority: card.getAttribute("data-priority"),
+        };
+        boardState[columnStatus].push(cardData);
+      });
+    });
+
+    localStorage.setItem("kanbanBoard", JSON.stringify(boardState));
+  }
+
+  function loadData() {
+    const savedState = localStorage.getItem("kanbanBoard");
+    if (!savedState) return;
+  
+    const boardState = JSON.parse(savedState);
+  
+    for (let status in boardState) {
+      const column = document.querySelector(`[data-status="${status}"]`);
+      if (!column) return;
+  
+      boardState[status].forEach(cardData => {
+        const newCard = document.createElement("div");
+        newCard.classList.add("card");
+        newCard.setAttribute("data-id", cardData.id);
+        newCard.setAttribute("data-priority", cardData.priority);
+        newCard.setAttribute("draggable", "true");
+        newCard.innerHTML = "<h3>" + cardData.title + "</h3><p>" + cardData.content + "</p><span>Priorité : " + cardData.priority + "</span>";
+  
+        column.appendChild(newCard);
+        DelCard(newCard);
+  
+        newCard.addEventListener("dragstart", (event) => {
+          const cardId = event.target.getAttribute("data-id");
+          event.dataTransfer.setData("text/plain", cardId);
+        });
+      });
+    }
+  }
+  loadData();
 });
