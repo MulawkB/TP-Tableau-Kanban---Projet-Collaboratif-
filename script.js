@@ -6,17 +6,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const addCardBtn = document.getElementById('addCardBtn');
   const searchInput = document.getElementById('searchInput');
   const sortByPriorityBtn = document.getElementById('sortByPriorityBtn');
-  
-  let cardId = 0;
-
-  const generateUniqueId = () => {
-    let id = cardId + 1;
-    while (document.querySelector(`[data-id="${id}"]`)) {
-      id += 1;
-    }
-    cardId = id;
-    return id;
-  };
 
   //--------------------------------DRAG & DROP-----------------------------------------//
   // Sélectionner les cartes et les colonnes
@@ -65,6 +54,17 @@ window.addEventListener("DOMContentLoaded", () => {
   //--------------------------------FIN DRAG & DROP-----------------------------------------//
 
   // Écoute des événements globaux (à l'extérieur de la boucle)
+  let cardId = 0;
+
+  const generateUniqueId = () => {
+    let id = cardId + 1;
+    while (document.querySelector(`[data-id="${id}"]`)) {
+      id += 1;
+    }
+    cardId = id;
+    return id;
+  };
+
   addCardBtn.addEventListener('click', () => {
     const title = window.prompt("Veuillez saisir un titre.");
     const content = window.prompt("Veuillez saisir un contenu.");
